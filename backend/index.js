@@ -53,7 +53,7 @@ app.use((req, res, next) => {
 
 app.use(cors({
   origin: [
-    "https://newhrm.netlify.app/",
+    "https://newonehrm.netlify.app/",
     // "https://zeai-hrm-1.onrender.com", // 🔁 Replace with your actual Netlify domain
     //"http://localhost:3000" // for local testing (optional)
   ],
