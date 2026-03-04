@@ -53,7 +53,7 @@ app.use((req, res, next) => {
 
 app.use(cors({
   origin: [
-    "https://new1992.netlify.app/",
+    "https://new1992.netlify.app",
      "https://company-04bz.onrender.com", // 🔁 Replace with your actual Netlify domain
     //"http://localhost:3000" // for local testing (optional)
   ],
