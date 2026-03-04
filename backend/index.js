@@ -41,7 +41,7 @@ const offerLetterBulkRoutes = require("./routes/offerletter_bulk");
 // ---------------- EXPRESS APP SETUP ---------------- //
 const app = express();
 const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGODB_URI;
+const MONGO_URI = process.env.MONGO_URI;
 
 // 🔹 Request logger
 app.use((req, res, next) => {
@@ -53,7 +53,7 @@ app.use((req, res, next) => {
 
 app.use(cors({
   origin: [
-    "https://newonehrm.netlify.app/",
+    "https://new1992.netlify.app/",
     // "https://zeai-hrm-1.onrender.com", // 🔁 Replace with your actual Netlify domain
     //"http://localhost:3000" // for local testing (optional)
   ],
