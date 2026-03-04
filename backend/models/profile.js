@@ -44,6 +44,7 @@ const employeeSchema = new mongoose.Schema({
   ifsc_code: { type: String },
   bank_account_number: { type: String },
   bank_account_type: { type: String },
+  location: { type: String },
   experiences: [experienceSchema],
   profileDocs: {
     aadhar: { type: String },
