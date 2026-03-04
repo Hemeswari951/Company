@@ -1,11 +1,9 @@
-//backend/index.js
 require('dotenv').config();
 
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
-
 
 // ---------------- MODELS ---------------- //
 const Employee = require('./models/employee');
@@ -28,7 +26,6 @@ const uploadRoutes = require('./routes/upload');
 const payslipRoutes = require('./routes/payslip');
 const companyEventRoutes = require('./routes/companyEvent');
 const oncampusRoutes = require('./routes/oncampus');
-//const inviteTracker = require('./routes/inviteTracker');
 const inviteTrackerRoutes = require('./routes/inviteTracker');
 const offcampusRoutes = require("./routes/offcampus");
 const offerLetterRoutes = require("./routes/offerletter");
@@ -41,31 +38,37 @@ const mailRoutes= require("./routes/mail");
 const reports = require("./routes/reports");
 const offerLetterBulkRoutes = require("./routes/offerletter_bulk");
 
-
-
-
 // ---------------- EXPRESS APP SETUP ---------------- //
 const app = express();
-const PORT =5000;
-const MONGO_URI = 'mongodb://localhost:27017/Demo_Db';
-//const MONGO_URI = 'mongodb://localhost:27017/Copy_Dashboard_Db';
+const PORT = process.env.PORT || 5000;
+const MONGO_URI = process.env.MONGODB_URI;
 
-// ---------------- MIDDLEWARE ---------------- //
+// 🔹 Request logger
 app.use((req, res, next) => {
   console.log(`📥 ${req.method} ${req.originalUrl}`);
   next();
 });
 
-app.use(cors());
-//app.use(express.json());
-//app.use(express.urlencoded({ extended: true }));
-// increase body size to allow larger JSON (if needed)
-// app.use(express.json({ limit: "10mb" }));
-// app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+// ---------------- MIDDLEWARE ---------------- //
+
+app.use(cors({
+  origin: [
+    "https://newhrm.netlify.app/",
+    // "https://zeai-hrm-1.onrender.com", // 🔁 Replace with your actual Netlify domain
+    //"http://localhost:3000" // for local testing (optional)
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}));
+
+// app.options('*', cors()); // ✅ Handles all OPTIONS requests
+// 🔹 Parsers
+// app.use(express.json());
+// app.use(express.urlencoded({ extended: true }));
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: "50mb" }));
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+// 🔹 Static uploads
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // ---------------- ROUTES ---------------- //
 app.use('/api', employeeRoutes);
@@ -95,7 +98,6 @@ app.use("/api/mail", mailRoutes);
 app.use("/api", reports);
 app.use("/api/offerletter", offerLetterBulkRoutes);
 
-
 // ---------------- PAYSLIP APIs ---------------- //
 app.get('/get-payslip-details', async (req, res) => {
   try {
@@ -111,7 +113,7 @@ app.get('/get-payslip-details', async (req, res) => {
     if (!monthData) return res.status(404).json({ message: 'Month data not found' });
 
     res.json({
-  employee_name: payslip.employee_name,
+      employee_name: payslip.employee_name,
   employee_id: payslip.employee_id,
   date_of_joining: payslip.date_of_joining,
   designation: payslip.designation,
@@ -127,7 +129,7 @@ app.get('/get-payslip-details', async (req, res) => {
 
   earnings: monthData.earnings,
   deductions: monthData.deductions,
-});
+    });
 
   } catch (error) {
     console.error('❌ Fetch Payslip Error:', error);
@@ -157,7 +159,7 @@ app.post('/get-multiple-payslips', async (req, res) => {
 
     res.status(200).json({
       employeeInfo: {
-  employee_name: payslip.employee_name,
+        employee_name: payslip.employee_name,
   employee_id: payslip.employee_id,
   date_of_joining: payslip.date_of_joining,
   designation: payslip.designation,
@@ -167,8 +169,7 @@ app.post('/get-multiple-payslips', async (req, res) => {
   pan: payslip.pan,
   uan: payslip.uan,
   esic_no: payslip.esic_no,
-},
-
+      },
       months: results,
     });
   } catch (error) {
@@ -199,7 +200,7 @@ app.get('/', (req, res) => {
 });
 
 // ---------------- CONNECT MONGODB & START SERVER ---------------- //
-mongoose.connect(MONGO_URI)
+mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log('✅ MongoDB connected');
     app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
